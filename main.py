@@ -1,4 +1,5 @@
 import requests
+import argparse
 import json
 
 def show_activity(data):
@@ -7,15 +8,16 @@ def show_activity(data):
         type = item['type']
         created_at = item['created_at']
         repo = item['repo']['name']
-
-        if "commits" in item['payload']:
-            count_commits = len(item['payload']['commits'])
-        print(f"{counter}. type: {type}, created_at: {created_at}, repo: {repo}, commits: {count_commits or 0}")
+        print(f"{counter}. type: {type}, created_at: {created_at}, repo: {repo}")
         count_commits = 0
         counter += 1
 
 def main():
-    username = "NwizuEmmanuel"
+    parser = argparse.ArgumentParser(description="Github activity viewer.")
+    parser.add_argument('name', type=str, help="Enter username")
+    args = parser.parse_args()
+
+    username = args.name
     url = f'https://api.github.com/users/{username}/events'
     response = requests.get(url)
     if response.status_code == 200:
